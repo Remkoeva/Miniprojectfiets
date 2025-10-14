@@ -78,31 +78,49 @@ V =...
 % weggelaten in de aanroep van segdyn)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%Vastzetten trapas
+
+Aconstraints(1,:) = [zeros(1,45) 1 0];
+Bconstraints(1,:) = 0;
+
+Aconstraints(2,:) = [zeros(1,46) 1 ];
+Bconstraints(2,:) = 0;
+
+K(1) = 0;
+V(1) = NaN;
+
+K(8) = 0;
+V(8) = NaN;
+
 %vastzetten enkelhoek phi2dp-phi3dp = 0
+
 K(17) = 0;
 V(17) = NaN;
-Aconstraints(1,:) = [zeros(1,40) 1 -1 zeros(1,5)];
-Bconstraints(1,1) = 0;
+Aconstraints(3,:) = [zeros(1,40) 1 -1 zeros(1,5)];
+Bconstraints(3,1) = 0;
+
+
 %Vastzetten hoek romp
 
-K(19) = 0;
-V(19) = NaN;
-Aconstraints(2,:) = [zeros(1,42) 1 zeros(1,4)];
-Bconstraints(2,1) = 0;
+% K(19) = 0;
+% V(19) = NaN;
+% Aconstraints(2,:) = [zeros(1,42) 1 zeros(1,4)];
+% Bconstraints(2,1) = 0;
 
 %positie van heup vaststellen
 
 
-Aconstraints(3,:) = [zeros(1,39) parms.segparms.L(1)*sin(fi(1)) parms.segparms.L(2)*sin(fi(2)) parms.segparms.L(3)*sin(fi(3)) parms.segparms.L(3)*sin(fi(3)) zeros(1,2) 1 0];
-Aconstraints(4,:) = [zeros(1,39) -parms.segparms.L(1)*cos(fi(1)) -parms.segparms.L(2)*cos(fi(2)) -parms.segparms.L(3)*cos(fi(3)) -parms.segparms.L(3)*cos(fi(3)) zeros(1,3) 1];
+% Aconstraints(5,:) = [zeros(1,39) -parms.segparms.L(1)*sin(fi(1)) -parms.segparms.L(2)*sin(fi(2)) -parms.segparms.L(3)*sin(fi(3)) -parms.segparms.L(3)*sin(fi(3)) zeros(1,2) 1 0];
+% Aconstraints(6,:) = [zeros(1,39) parms.segparms.L(1)*cos(fi(1)) parms.segparms.L(2)*cos(fi(2)) parms.segparms.L(3)*cos(fi(3)) parms.segparms.L(3)*cos(fi(3)) zeros(1,3) 1];
+% 
+% Bconstraints(5,1) = 0;
+% Bconstraints(6,1) = 0;
+% 
+% K(5) = 0;
+% V(5) = NaN;
+% K(12) = 0;
+% V(12) = NaN;
 
-Bconstraints(3,1) = 0;
-Bconstraints(4,1) = 0;
-
-K(5) = 0;
-V(5) = NaN;
-K(12) = 0;
-V(12) = NaN;
 
 % bij ingewikkelder constraints is het voor de leesbaarheid aan te bevelen om segparms en
 % state eerst te ontrafelen in losse variabelen
