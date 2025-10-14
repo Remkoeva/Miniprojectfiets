@@ -1,0 +1,149 @@
+function [statedot,y]=segdynshell(t,state,u0,parms)
+%function [statedot,y]=segdynshell(t,state,u0,parms)
+%
+% deze functie kan worden aangeroepen door een standaard integrator;
+% gebruikmakend van segdyn (Casius et al., 2004) wordt de versnelling van 
+% een keten van segmenten berekend
+%
+% inputs: 
+% t (scalar, huidige tijd)
+% state (vector, huidige waarde van de toestand van het systeem; zie paragraaf 5.5 van Casius et al.)
+% u0 (vector, steady state waarden voor de ingangen van het systeem)
+% parms (struct, bevat alle verder benodigde parameters, enige eis is dat
+% de velden binnen deze struct in de verschillende functies consistent met
+% elkaar zijn
+%
+% outputs:
+% statedot (KOLOMvector, afgeleide van state en dus zelfde lengte als state)
+% y (KOLOMvector, alle uitgangen van het systeem)
+%   NB y wordt genegeerd tijdens het uitvoeren van een simulatie met een standaard MATLAB integrator
+%   daarom is het ivm rekentijd verstandig y alleen te berekenen als dat
+%   nodig is; dit is te regelen vanuit het hoofdprogramma via
+%   parms.calculate_outputs; zie voorbeeld hoofdprogramma
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: segdynstate (volledige vector coordinaten (zie segdyn)) maken uit state
+% als er geen additionele dynamica is dan zullen segdynstate en state identiek zijn
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+segdynstate = state;
+
+fi = state(1:6);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: uitwendige krachten en momenten (voor zover niet onbekend) berekenen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Fextx = [0 0 0 0 0 0];
+Fexty = [-9.81*parms.segparms.m(1) -9.81*parms.segparms.m(2) -9.81*parms.segparms.m(3) -9.81*parms.segparms.m(4) -9.81*parms.segparms.m(5) -9.81*parms.segparms.m(6)];
+Mext  = [0 0 0 0 0 0];
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: (optioneel) tijds- of toestands-afhankelijk deel van u berekenen
+% bij constante input zal u gelijk zijn aan u0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+u = u0;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: K en V aanmaken (voor beschrijving: zie segdyn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+K = ...
+    [   1 0 0 0 0 0 1 ...% Frx (n+1)
+        1 0 0 0 0 0 1 ...% Fry (n+1)
+        1 1 1 1 1 1 1  ...% M (n+1)
+        1 1 1 1 1 1  ...% Fextx (n)
+        1 1 1 1 1 1  ...% Fexty (n)
+        1 1 1 1 1 1  ...% Mext (n)     
+        0 0 0 0 0 0 ...% phidd (n)
+        0 0]; % basedd (2)
+
+V =...
+    [   0 NaN NaN NaN NaN NaN 0 ...% Frx (n+1)
+        0 NaN NaN NaN NaN NaN 0 ...% Fry (n+1)
+        0 0 0 0 0 0 0 ...% M (n+1)
+        Fextx ...% Fextx (n)
+        Fexty ...% Fexty (n)
+        Mext ...% Mext (n)     
+        NaN NaN NaN NaN NaN NaN...% phidd (n)
+        NaN NaN]; % basedd (2)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: (optioneel) Aconstraints en Bconstraints aanmaken
+% (als er geen kinematische constraints zijn mogen Aconstraints en Bconstraints worden
+% weggelaten in de aanroep van segdyn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%vastzetten enkelhoek phi2dp-phi3dp = 0
+K(17) = 0;
+V(17) = NaN;
+Aconstraints(1,:) = [zeros(1,40) 1 -1 zeros(1,5)];
+Bconstraints(1,1) = 0;
+%Vastzetten hoek romp
+
+K(19) = 0;
+V(19) = NaN;
+Aconstraints(2,:) = [zeros(1,42) 1 zeros(1,4)];
+Bconstraints(2,1) = 0;
+
+%positie van heup vaststellen
+
+
+Aconstraints(3,:) = [zeros(1,39) parms.segparms.L(1)*sin(fi(1)) parms.segparms.L(2)*sin(fi(2)) parms.segparms.L(3)*sin(fi(3)) parms.segparms.L(3)*sin(fi(3)) zeros(1,2) 1 0];
+Aconstraints(4,:) = [zeros(1,39) -parms.segparms.L(1)*cos(fi(1)) -parms.segparms.L(2)*cos(fi(2)) -parms.segparms.L(3)*cos(fi(3)) -parms.segparms.L(3)*cos(fi(3)) zeros(1,3) 1];
+
+Bconstraints(3,1) = 0;
+Bconstraints(4,1) = 0;
+
+K(5) = 0;
+V(5) = NaN;
+K(12) = 0;
+V(12) = NaN;
+
+% bij ingewikkelder constraints is het voor de leesbaarheid aan te bevelen om segparms en
+% state eerst te ontrafelen in losse variabelen
+
+% Aconstraints(1,:) = ...
+%     [   ?? ...% Frx (n+1)
+%         ?? ...% Fry (n+1)
+%         ?? ...% M (n+1)
+%         ?? ...% Fextx (n)
+%         ?? ...% Fexty (n)
+%         ?? ...% Mext (n)     
+%         ?? ...% phidd (n)
+%         ??]; % basedd (2)
+
+%Bconstraints(1,1) = ??;
+
+%K(??) = ??
+%V(??) = ??
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% segdyn aanroepen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[segdynstatedot, Vnew, succes] = segdyn(segdynstate, parms.segparms, K, V,Aconstraints, Bconstraints);
+% als er kinematische constraints zijn dan Aconstraints en Bconstraints toevoegen in bovenstaande aanroep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: statedot maken uit segdynstatedot
+% in veel gevallen zullen segdynstatedot en statedot identiek zijn
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+statedot = segdynstatedot;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% applicatiespecifiek: uitgangen y berekenen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% y is een KOLOMvector van willekeurige lengte die alle interessant geachte afhankelijke variabelen
+% bevat (bijv reactiekrachten, versnellingen, energietermen, zwaartepuntpositie etc etc)
+
+if parms.calculate_outputs
+    y = Vnew;
+end
