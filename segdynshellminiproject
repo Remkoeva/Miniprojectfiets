@@ -93,18 +93,17 @@ K(8) = 0;
 V(8) = NaN;
 
 %% Heuppositie vastzetten (heup op zadel)
-% De heup bevindt zich aan het uiteinde van segment 4
-% De positie (x,y) van de heup wordt gefixeerd
+%vastzetten positie heup
+Aconstraints(5,:) = [zeros(1,39) parms.segparms.L(1)*sin(fi(1)) parms.segparms.L(2)*sin(fi(2)) parms.segparms.L(3)*sin(fi(3)) parms.segparms.L(4)*sin(fi(4)) zeros(1,2) 1 0];
+Aconstraints(6,:) = [zeros(1,39) -parms.segparms.L(1)*cos(fi(1)) -parms.segparms.L(2)*cos(fi(2)) -parms.segparms.L(3)*cos(fi(3)) -parms.segparms.L(4)*cos(fi(4)) zeros(1,3) 1];
 
-xheup = parms.segparms.L(1)*cos(fi(1)) + parms.segparms.L(2)*cos(fi(2)) + parms.segparms.L(3)*cos(fi(3)) + parms.segparms.L(4)*cos(fi(4));
-yheup = parms.segparms.L(1)*sin(fi(1)) + parms.segparms.L(2)*sin(fi(2)) + parms.segparms.L(3)*sin(fi(3)) + parms.segparms.L(4)*sin(fi(4));
+Bconstraints(5,1) = -parms.segparms.L(1)*cos(fi(1))*(fip(1)^2) -parms.segparms.L(2)*cos(fi(2))*(fip(2)^2)  -parms.segparms.L(3)*cos(fi(3))*(fip(3)^2)  -parms.segparms.L(4)*cos(fi(4))*(fip(4)^2);
+Bconstraints(6,1) = -parms.segparms.L(1)*sin(fi(1))*(fip(1)^2) -parms.segparms.L(2)*sin(fi(2))*(fip(2)^2)  -parms.segparms.L(3)*sin(fi(3))*(fip(3)^2)  -parms.segparms.L(4)*cos(fi(4))*(fip(4)^2);
 
-% Constraintvergelijkingen lineariseren naar de versnellingen
-Aconstraints(4,:) = [zeros(1,39) -parms.segparms.L(1)*sin(fi(1)) -parms.segparms.L(2)*sin(fi(2)) -parms.segparms.L(3)*sin(fi(3)) -parms.segparms.L(4)*sin(fi(4)) zeros(1,7) 1 0]; % x-heup constraint
-Bconstraints(4,1) = 0;
-
-Aconstraints(5,:) = [zeros(1,39) parms.segparms.L(1)*cos(fi(1)) parms.segparms.L(2)*cos(fi(2)) parms.segparms.L(3)*cos(fi(3)) parms.segparms.L(4)*cos(fi(4)) zeros(1,8) 1]; % y-heup constraint
-Bconstraints(5,1) = 0;
+K(26) = 0;
+V(26) = NaN;
+K(32) = 0;
+V(32) = NaN;
 
 % En de bijbehorende K en V waarden aanpassen zodat MATLAB weet dat deze
 % outputs niet vrij zijn
