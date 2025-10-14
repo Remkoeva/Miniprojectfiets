@@ -92,6 +92,28 @@ V(1) = NaN;
 K(8) = 0;
 V(8) = NaN;
 
+%% Heuppositie vastzetten (heup op zadel)
+% De heup bevindt zich aan het uiteinde van segment 4
+% De positie (x,y) van de heup wordt gefixeerd
+
+xheup = parms.segparms.L(1)*cos(fi(1)) + parms.segparms.L(2)*cos(fi(2)) + parms.segparms.L(3)*cos(fi(3)) + parms.segparms.L(4)*cos(fi(4));
+yheup = parms.segparms.L(1)*sin(fi(1)) + parms.segparms.L(2)*sin(fi(2)) + parms.segparms.L(3)*sin(fi(3)) + parms.segparms.L(4)*sin(fi(4));
+
+% Constraintvergelijkingen lineariseren naar de versnellingen
+Aconstraints(4,:) = [zeros(1,39) -parms.segparms.L(1)*sin(fi(1)) -parms.segparms.L(2)*sin(fi(2)) -parms.segparms.L(3)*sin(fi(3)) -parms.segparms.L(4)*sin(fi(4)) zeros(1,7) 1 0]; % x-heup constraint
+Bconstraints(4,1) = 0;
+
+Aconstraints(5,:) = [zeros(1,39) parms.segparms.L(1)*cos(fi(1)) parms.segparms.L(2)*cos(fi(2)) parms.segparms.L(3)*cos(fi(3)) parms.segparms.L(4)*cos(fi(4)) zeros(1,8) 1]; % y-heup constraint
+Bconstraints(5,1) = 0;
+
+% En de bijbehorende K en V waarden aanpassen zodat MATLAB weet dat deze
+% outputs niet vrij zijn
+K(5) = 0;
+V(5) = NaN;
+K(12) = 0;
+V(12) = NaN;
+
+
 %vastzetten enkelhoek phi2dp-phi3dp = 0
 
 K(17) = 0;
