@@ -93,55 +93,47 @@ V(1) = NaN;
 K(8) = 0;
 V(8) = NaN;
 
-%% Heuppositie vastzetten (heup op zadel)
-%vastzetten positie heup
-Aconstraints(5,:) = [zeros(1,39) parms.segparms.L(1)*sin(fi(1)) parms.segparms.L(2)*sin(fi(2)) parms.segparms.L(3)*sin(fi(3)) parms.segparms.L(4)*sin(fi(4)) zeros(1,2) -1 0]; %parms.segparms.L(5)*sin(fi(5)) parms.segparms.L(6)*sin(fi(6)) -1 0];
-Aconstraints(6,:) = [zeros(1,39) -parms.segparms.L(1)*cos(fi(1)) -parms.segparms.L(2)*cos(fi(2)) -parms.segparms.L(3)*cos(fi(3)) -parms.segparms.L(4)*cos(fi(4)) zeros(1,3) -1];  %-parms.segparms.L(5)*cos(fi(5)) -parms.segparms.L(6)*cos(fi(6)) 0 -1];
+%opleggen hoeksnelheid door de versnelling van fi1 gelijk aan 0 te maken
+Aconstraints(3,:) = [zeros(1,39) 1 zeros(1,7)];
+Bconstraints(3,1) = 0;
 
-Bconstraints(5,1) = -parms.segparms.L(1)*cos(fi(1))*(fip(1)^2) -parms.segparms.L(2)*cos(fi(2))*(fip(2)^2)  -parms.segparms.L(3)*cos(fi(3))*(fip(3)^2)  -parms.segparms.L(4)*cos(fi(4))*(fip(4)^2);%-parms.segparms.L(5)*cos(fi(5))*(fip(5)^2) -parms.segparms.L(6)*cos(fi(6))*(fip(6)^2);
-Bconstraints(6,1) = -parms.segparms.L(1)*sin(fi(1))*(fip(1)^2) -parms.segparms.L(2)*sin(fi(2))*(fip(2)^2)  -parms.segparms.L(3)*sin(fi(3))*(fip(3)^2)  -parms.segparms.L(4)*sin(fi(4))*(fip(4)^2);%-parms.segparms.L(5)*sin(fi(5))*(fip(5)^2) -parms.segparms.L(6)*sin(fi(6))*(fip(6)^2);
+K(34) = 0;
+V(34) = NaN;
+
+%vastzetten enkelhoek phi2dp-phi3dp = 0
+
+K(17) = 0;
+V(17) = NaN;
+Aconstraints(4,:) = [zeros(1,40) 1 -1 zeros(1,5)];
+Bconstraints(4,1) = 0;
+
+%vastzetten oriëntatie romp
+Aconstraints(5,:) = [zeros(1,43) 1 zeros(1,3)];
+Bconstraints(5,1) = 0;
+
+K(38) = 0;
+V(38) = NaN;
+
+
+
+%vastzetten positie heup
+Aconstraints(6,:) = zeros(1,47);
+Aconstraints(7,:) = zeros(1,47);
+
+Aconstraints(6,40:43) = [-parms.segparms.L(1)*sin(fi(1)) -parms.segparms.L(2)*sin(fi(2)) -parms.segparms.L(3)*sin(fi(3)) -parms.segparms.L(4)*sin(fi(4))]; 
+Aconstraints(7,40:43) = [parms.segparms.L(1)*cos(fi(1)) parms.segparms.L(2)*cos(fi(2)) parms.segparms.L(3)*cos(fi(3)) parms.segparms.L(4)*cos(fi(4))]; 
+
+Aconstraints(6,46) = 1;
+Aconstraints(7,47) = 1;
+
+Bconstraints(6,1) = parms.segparms.L(1)*cos(fi(1))*(fip(1)^2) + parms.segparms.L(2)*cos(fi(2))*(fip(2)^2) + parms.segparms.L(3)*cos(fi(3))*(fip(3)^2) + parms.segparms.L(4)*cos(fi(4))*(fip(4)^2);%-parms.segparms.L(5)*cos(fi(5))*(fip(5)^2) -parms.segparms.L(6)*cos(fi(6))*(fip(6)^2);
+Bconstraints(7,1) = parms.segparms.L(1)*sin(fi(1))*(fip(1)^2) + parms.segparms.L(2)*sin(fi(2))*(fip(2)^2) + parms.segparms.L(3)*sin(fi(3))*(fip(3)^2) + parms.segparms.L(4)*sin(fi(4))*(fip(4)^2);%-parms.segparms.L(5)*sin(fi(5))*(fip(5)^2) -parms.segparms.L(6)*sin(fi(6))*(fip(6)^2);
 
 K(26) = 0;
 V(26) = NaN;
 K(32) = 0;
 V(32) = NaN;
 
-% En de bijbehorende K en V waarden aanpassen zodat MATLAB weet dat deze
-% outputs niet vrij zijn
-K(5) = 0;
-V(5) = NaN;
-K(12) = 0;
-V(12) = NaN;
-
-
-%vastzetten enkelhoek phi2dp-phi3dp = 0
-
-K(17) = 0;
-V(17) = NaN;
-Aconstraints(3,:) = [zeros(1,40) 1 -1 zeros(1,5)];
-Bconstraints(3,1) = 0;
-
-
-%Vastzetten hoek romp
-
-% K(19) = 0;
-% V(19) = NaN;
-% Aconstraints(2,:) = [zeros(1,42) 1 zeros(1,4)];
-% Bconstraints(2,1) = 0;
-
-%positie van heup vaststellen
-
-
-% Aconstraints(5,:) = [zeros(1,39) -parms.segparms.L(1)*sin(fi(1)) -parms.segparms.L(2)*sin(fi(2)) -parms.segparms.L(3)*sin(fi(3)) -parms.segparms.L(3)*sin(fi(3)) zeros(1,2) 1 0];
-% Aconstraints(6,:) = [zeros(1,39) parms.segparms.L(1)*cos(fi(1)) parms.segparms.L(2)*cos(fi(2)) parms.segparms.L(3)*cos(fi(3)) parms.segparms.L(3)*cos(fi(3)) zeros(1,3) 1];
-% 
-% Bconstraints(5,1) = 0;
-% Bconstraints(6,1) = 0;
-% 
-% K(5) = 0;
-% V(5) = NaN;
-% K(12) = 0;
-% V(12) = NaN;
 
 
 % bij ingewikkelder constraints is het voor de leesbaarheid aan te bevelen om segparms en
