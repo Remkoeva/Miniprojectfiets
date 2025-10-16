@@ -72,6 +72,9 @@ R_romp = [ex_lok_romp ey_lok_romp];
 % TIBIA:   The tibial segment is located at the mid point of the line between
 % the medial and lateral femoral epicondyles (see note belowİ).
 % PATELLA: The patellar frame is located at the most distal point of the patella.
+% CALCANeUS: The calcaneal frame is located at the most distal, inferior point
+% on the posterior surface of the calcaneus. HIER MOETEN WE MISSCHIEN EEN
+% PUNT TEN OPZICHTE VAN DE ENKEL VOOR VINDEN
 
 % In the anatomical position, the X-axes point anteriorly, the Y-axes point
 % superiorly, and the Z-axes point laterally.  Also note that this muscle
@@ -100,26 +103,35 @@ Fmax_bicfemsh = 402;
 
 %gluteus maximus superior middle en inferior, hier keuze gemaakt uit genoemde
 %waarden
-gmaxsup_or = [-0.1195; 0.0700]; %pelvis
-gmaxsup_in = [-0.0457; -0.0248]; % femur
-Fmax_gmaxsup = 382;
+% gmaxsup_or = [-0.1195; 0.0700]; %pelvis
+% gmaxsup_in = [-0.0457; -0.0248]; %femur
+% Fmax_gmaxsup = 382;
+% 
+% gmaxmid_or = [-0.1349; 0.0176];%pelvis
+% gmaxmid_in = [-0.0426; -0.0530];%femur
+% Fmax_gmaxmid = 546;
+% 
+% gmaxinf_or = [-0.1556; -0.0314];%pelvis
+% gmaxinf_in = [-0.0299; -0.1041];%femur
+% Fmax_gmaxinf = 368;
 
-gmaxmid_or = [-0.1349; 0.0176]; % pelvis
-gmaxmid_in = [-0.0426; -0.0530]; %femur
-Fmax_gmaxmid = 546;
+gmax_or = [-0.1349; 0.0176];%pelvis
+gmax_in = [-0.0426; -0.0248];%femur
+Fmax_gmax = 382+546+368;
 
-gmaxinf_or = [-0.1556; -0.0314];%pelvis
-gmaxinf_in = [-0.0299; -0.1041];%femur
-Fmax_gmaxinf = 368;
 
 %iliacus en psoas
-ilia_or = [-0.0674 ; 0.0365]; %pelvis
-ilia_ins = [0.0017 ;-0.0543]; %femur
-Fmax_ilia = 429;
+% ilia_or = [-0.0674 ; 0.0365]; %pelvis
+% ilia_ins = [0.0017 ;-0.0543]; %femur
+% Fmax_ilia = 429;
+% 
+% psoas_or = [-0.0647 ; 0.0887]; %pelvis
+% psoas_in = [0.0016 ;-0.0507]; %femur
+% Fmax_psoas = 371;
 
-psoas_or = [-0.0647 ; 0.0887]; %pelvis
-psoas_in = [0.0016 ;-0.0507]; %femur
-Fmax_psoas = 371;
+ilpso_or = [-0.0647;0.0626 ]; %pelvis
+ilpso_in = [0.0016 ;-0.0507]; femur
+Fmax_ilpso = 371;
 
 %quadriceps
 %Hoe gaan we van patella aanhechting naar aanhechting op onderbeen???
@@ -145,13 +157,17 @@ vaslat_in = [0.0103 ; 0.0423];%patella
 Fmax_vaslat = 1871;
 
 %gastrocnemius
-gasmed_or = [-0.0127 ;-0.3929]; %femur
-gasmed_in = [0.0044 ; 0.0310]; %calcaneus
-Fmax_gasmed = 1113;
+% gasmed_or = [-0.0127 ;-0.3929]; %femur
+% gasmed_in = [0.0044 ; 0.0310]; %calcaneus
+% Fmax_gasmed = 1113;
+% 
+% gaslat_or = [-0.0155 ;-0.3946]; %femur
+% gaslat_ins = [ 0.0044 ; 0.0310]; %calcaneus
+% Fmax_gaslat = 488;
 
-gaslat_or = [-0.0155 ;-0.3946]; %femur
-gaslat_ins = [ 0.0044 ; 0.0310]; %calcaneus
-Fmax_gaslat = 488;
+gas_or = [-0.0127 ;-0.3929];%femur
+gas_in = [0.0044 ; 0.0310];%calcaneus
+Fmax_gas = 1113+488;
 
 
 
@@ -160,19 +176,20 @@ Fmax_gaslat = 488;
 % bicfemsh_or = [0.0050; -0.2111]; %femur
 % bicfemsh_in = [-0.0101; -0.0725]; %tibia
 % Fmax_bicfemsh = 402;
-
+ 
 glob_ori_bicfemsh = rH + R_bb*bicfemsh_or;
 glob_ins_bicfemsh = rK + R_ob*bicfemsh_in;
 l_bicfemsh = norm(glob_ins_bicfemsh-glob_ori_bicfemsh);
 
 %snelheden van origo en insertie in globaal assenstelsel
-v_ori_bicfemsh_glob = vH + ([ey_lok_bb -ex_lok_bb].*fi(4))*bicfemsh_or;
-v_ins_bicfemsh_glob = vK + ([ey_lok_ob -ex_lok_ob].*fi(4))*bicfemsh_in;
+v_ori_bicfemsh_glob = vH + ([ey_lok_bb -ex_lok_bb].*fip(4))*bicfemsh_or;
+v_ins_bicfemsh_glob = vK + ([ey_lok_ob -ex_lok_ob].*fip(3))*bicfemsh_in;
 
 %eenheidsvector van insertie t.o.v. oorsprong
 %WAT GEBEURT HIER PRECIES???
 e_inor_bicfemsh = (glob_ins_bicfemsh - glob_ori_bicfemsh)./(norm(glob_ins_bicfemsh - glob_ori_bicfemsh));
-v_bicfemsh = dot(e_inor_bicfemsh,v_ins_bicfemsh_glob) - dot(e_inor_bicfemsh,v_ori_bicfemsh_glob);
+v_bicfemsh = dot(e_inor_bicfemsh,v_ori_bicfemsh_glob) - dot(e_inor_bicfemsh,v_ins_bicfemsh_glob);
+
 
 
 
