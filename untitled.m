@@ -84,13 +84,13 @@ pos = state(:,13:14);
 posp = state(:,15:16);
 
 [epot,ekinx,ekiny,erot,etot]=energy(fitot,fiptot,pos,posp,parms.segparms);
-
-plot(t,etot)
-figure
-plot(t,fitot)
-figure
-plot(t,y(:,34))
-figure
+% 
+% plot(t,etot)
+% figure
+% plot(t,fitot)
+% figure
+% plot(t,y(:,34))
+% figure
 % 
 % vcrankx = -L(1).*sin(state(:,1)).*state(:,7);
 % vcranky = L(1).*cos(state(:,1)).*state(:,7);
@@ -98,12 +98,12 @@ figure
 % 
 plot(t,y(:,34).*state(:,7))
 
-
-
+% figure
+% plot(t,y(:,38))
+% figure
+% plot(t,state(:,3),t,state(:,4))
+% legend('onderbeen', 'bovenbeen')
+% figure
+% plot(t,(pi-state(:,3)+state(:,4)))
 figure
-plot(t,y(:,38))
-figure
-plot(t,state(:,3),t,state(:,4))
-legend('onderbeen', 'bovenbeen')
-figure
-plot(t,(pi-state(:,3)+state(:,4)))
+plot(t,y(:,48),t,y(:,49))
