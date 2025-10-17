@@ -103,41 +103,31 @@ Fmax_bicfemlh = 717;
 bicfemsh_or = [0.0050; -0.2111]; %femur
 bicfemsh_in = [-0.0101; -0.0725]; %tibia
 Fmax_bicfemsh = 402;
-pees_sl_bicfemsh = 0.100;
-opt_fl_bicfemsh = 0.1730;
-vmax_bicfemsh = vmax*opt_fl_bicfemsh;
 
 %gluteus maximus superior middle en inferior, hier keuze gemaakt uit genoemde
 %waarden
-% gmaxsup_or = [-0.1195; 0.0700]; %pelvis
-% gmaxsup_in = [-0.0457; -0.0248]; %femur
-% Fmax_gmaxsup = 382;
-% 
-% gmaxmid_or = [-0.1349; 0.0176];%pelvis
-% gmaxmid_in = [-0.0426; -0.0530];%femur
-% Fmax_gmaxmid = 546;
-% 
-% gmaxinf_or = [-0.1556; -0.0314];%pelvis
-% gmaxinf_in = [-0.0299; -0.1041];%femur
-% Fmax_gmaxinf = 368;
+gmaxsup_or = [-0.1195; 0.0700]; %pelvis
+gmaxsup_in = [-0.0457; -0.0248]; % femur
+Fmax_gmaxsup = 382;
 
-gmax_or = [-0.1349; 0.0176];%pelvis
-gmax_in = [-0.0426; -0.0248];%femur
-Fmax_gmax = 382+546+368;
+gmaxmid_or = [-0.1349; 0.0176]; % pelvis
+gmaxmid_in = [-0.0426; -0.0530]; %femur
+Fmax_gmaxmid = 546;
 
+gmaxinf_or = [-0.1556; -0.0314];%pelvis
+gmaxinf_in = [-0.0299; -0.1041];%femur
+Fmax_gmaxinf = 368;
 
-%iliacus en psoas
-% ilia_or = [-0.0674 ; 0.0365]; %pelvis
-% ilia_ins = [0.0017 ;-0.0543]; %femur
-% Fmax_ilia = 429;
-% 
-% psoas_or = [-0.0647 ; 0.0887]; %pelvis
-% psoas_in = [0.0016 ;-0.0507]; %femur
-% Fmax_psoas = 371;
+%iliacus en psoas deze hebben geen wrapping point uit file
+ilia_or = [-0.0674 ; 0.0365]; %pelvis
+ilia_ins = [0.0017 ;-0.0543]; %femur
+ilia_wrap = 
+Fmax_ilia = 429;
 
-ilpso_or = [-0.0647;0.0626 ]; %pelvis
-ilpso_in = [0.0016 ;-0.0507]; %femur
-Fmax_ilpso = 371;
+psoas_or = [-0.0647 ; 0.0887]; %pelvis
+psoas_in = [0.0016 ;-0.0507]; %femur
+psoas_wrap = 
+Fmax_psoas = 371;
 
 %quadriceps
 %Hoe gaan we van patella aanhechting naar aanhechting op onderbeen???
@@ -147,47 +137,150 @@ recfem_wrap = [0.0334 ;-0.4030]; %femur range KNEEang (-3.0, -1.46)/*radians*/
 recfem_in = [0.0121 ; 0.0437]; %patella
 Fmax_recfem = 779;
 
+% vasmed_wrap1 = [0.0370; -0.4048];
+% vasmed_wrap2 = [0.0274; -0.4255];
+% werken voor kniehoeken (-3.0, -1.21) en (-3.0, -1.78)
 vasmed_or = [0.0356 ; -0.2769]; %femur
 vasmed_wrap = [0.0274 ; -0.4255]; %femur
 vasmed_in = [0.0063 ; 0.0445];%patella
 Fmax_vasmed = 1294;
 
 vasint_or = [0.0290 ;-0.1924];%femur
-vasint_wrap = [0.0343; -0.4030];%femur
-vasint_in = [0.0058 ; 0.0480];%patella
+vasint_wrap = [0.0343; -0.4030];%femur kniehoek (-3.0, -1.42)
+vasint_in = [0.0058 ; 0.0480];%patella 
 Fmax_vasint = 1365;
 
+% vaslat_wrap1 = [0.0361; -0.4030];
+% vaslat_wrap2 = [0.0253; -0.4243];
+% kniehoek (-3.0, -1.21) en (-3.0, -1.92)
 vaslat_or = [0.0048 ;-0.1854];%femur
 vaslat_wrap = [0.0361; -0.4030];%femur
 vaslat_in = [0.0103 ; 0.0423];%patella
 Fmax_vaslat = 1871;
 
-%gastrocnemius
-% gasmed_or = [-0.0127 ;-0.3929]; %femur
-% gasmed_in = [0.0044 ; 0.0310]; %calcaneus
-% Fmax_gasmed = 1113;
-% 
-% gaslat_or = [-0.0155 ;-0.3946]; %femur
-% gaslat_ins = [ 0.0044 ; 0.0310]; %calcaneus
-% Fmax_gaslat = 488;
+%gastrocnemius medialis
+gasmed_or = [-0.0127 ;-0.3929]; %femur
+gasmed_in = [0.0044 ; 0.0310]; %calcaneus
+gasmed_wrap = [-0.0239; -0.4022]; % voor kniehoek (-0.77, 0.1)
+Fmax_gasmed = 1113;
 
-gas_or = [-0.0127 ;-0.3929];%femur
-gas_in = [0.0044 ; 0.0310];%calcaneus
-Fmax_gas = 1113+488;
+% gastocmenius lateralis
+gaslat_or = [-0.0155 ;-0.3946]; %femur
+gaslat_ins = [ 0.0044 ; 0.0310]; %calcaneus
+gaslat_wrap = [-0.0254; -0.4018]; % voor kniehoek (-0.77, 0.1)
+Fmax_gaslat = 488;
+
 
 %DE PEZEN WORDEN VOOR NU ALS ONEINDIG STIJF EN MASSALOOS BESCHOUWD
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lengtes spieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Posities van origo en insertie in globaal assenstelsel
 %biceps femoris short head
 % bicfemsh_or = [0.0050; -0.2111]; %femur
 % bicfemsh_in = [-0.0101; -0.0725]; %tibia
 % Fmax_bicfemsh = 402;
- 
+
+
 glob_ori_bicfemsh = rH + R_bb*bicfemsh_or;
 glob_ins_bicfemsh = rK + R_ob*bicfemsh_in;
 l_bicfemsh = norm(glob_ins_bicfemsh-glob_ori_bicfemsh);
-fl_bicfemsh = l_bicfemsh - pees_sl_bicfemsh;
+
+% Semimembranosus
+glob_ori_semimem = rH + R_romp * semimem_or;
+glob_ins_semimem = rK + R_ob * semimem_in;
+l_semimem = norm(glob_ins_semimem - glob_ori_semimem);
+
+% Semitendinosus
+glob_ori_semiten = rH + R_romp * semiten_or;
+glob_ins_semiten = rK + R_ob * semiten_in;
+l_semiten = norm(glob_ins_semiten - glob_ori_semiten);
+
+% Biceps femoris long head
+glob_ori_bicfemlh = rH + R_romp * bicfemlh_or;
+glob_ins_bicfemlh = rK + R_ob * bicfemlh_in;
+l_bicfemlh = norm(glob_ins_bicfemlh - glob_ori_bicfemlh);
+
+% Biceps femoris short head (monoarticulair)
+glob_ori_bicfemsh = rH + R_bb * bicfemsh_or;
+glob_ins_bicfemsh = rK + R_ob * bicfemsh_in;
+l_bicfemsh = norm(glob_ins_bicfemsh - glob_ori_bicfemsh);
+
+% glutes maximus superior
+glob_ori_gmaxsup = rS + R_romp * gmaxsup_or;
+glob_ins_gmaxsup = rH + R_bb * gmaxsup_in;
+l_gmaxsup = norm(glob_ins_gmaxsup - glob_ori_gmaxsup);
+
+% glutes maximus middle
+glob_ori_gmaxmid = rS + R_romp * gmaxmid_or;
+glob_ins_gmaxmid = rH + R_bb * gmaxmid_in;
+l_gmaxmid = norm(glob_ins_gmaxmid - glob_ori_gmaxmid);
+
+% glutes maximus inferior
+glob_ori_gmaxinf = rS + R_romp * gmaxinf_or;
+glob_ins_gmaxinf = rH + R_bb * gmaxinf_in;
+l_gmaxinf = norm(glob_ins_gmaxinf - glob_ori_gmaxinf);
+
+% Iliacus
+glob_ori_ilia = rS + R_romp * ilia_or;
+glob_wrap_ilia = rH + R_bb * ilia_wrap;
+glob_ins_ilia = rK + R_bb * ilia_ins;
+l_ilia = norm(glob_wrap_ilia - glob_ori_ilia) + norm(glob_ins_ilia - glob_wrap_ilia);
+
+% Psoas
+glob_ori_psoas = rS + R_romp * psoas_or;
+glob_wrap_psoas = rH + R_bb * psoas_wrap;  
+glob_ins_psoas = rK + R_bb * psoas_in;
+l_psoas = norm(glob_wrap_psoas - glob_ori_psoas) + norm(glob_ins_psoas - glob_wrap_psoas);
+
+% Rectus femoris
+glob_ori_recfem = rS + R_romp * recfem_or;
+glob_wrap_recfem = rK + R_bb * recfem_wrap;
+glob_ins_recfem = rE + R_ob * recfem_in;
+l_recfem = norm(glob_wrap_recfem - glob_ori_recfem) + norm(glob_ins_recfem - glob_wrap_recfem);
+
+% Vastus medialis
+glob_ori_vasmed = rH + R_bb * vasmed_or;
+glob_wrap_vasmed = rK + R_bb * vasmed_wrap;
+glob_ins_vasmed = rE + R_ob * vasmed_in;
+l_vasmed = norm(glob_wrap_vasmed - glob_ori_vasmed) + norm(glob_ins_vasmed - glob_wrap_vasmed);
+
+% Vastus intermedius
+glob_ori_vasint = rH + R_bb * vasint_or;
+glob_wrap_vasint = rK + R_bb * vasint_wrap;
+glob_ins_vasint = rE + R_ob * vasint_in;
+l_vasint = norm(glob_wrap_vasint - glob_ori_vasint) + norm(glob_ins_vasint - glob_wrap_vasint);
+
+% Vastus lateralis
+glob_ori_vaslat = rH + R_bb * vaslat_or;
+glob_wrap_vaslat = rK + R_bb * vaslat_wrap;
+glob_ins_vaslat = rE + R_ob * vaslat_in;
+l_vaslat = norm(glob_wrap_vaslat - glob_ori_vaslat) + norm(glob_ins_vaslat - glob_wrap_vaslat);
+
+% Gemiddelde kop (med + lat)
+glob_ori_gas = rH + R_bb * gasmed_or;
+glob_wrap_gas = rK + R_ob * [-0.0247; -0.4020]; % gecombineerde wrapping point
+glob_ins_gas = rE + R_ob * gasmed_in;
+l_gas = norm(glob_wrap_gas - glob_ori_gas) + norm(glob_ins_gas - glob_wrap_gas);
+
+% gastocmenius medialis
+glob_ori_gasmed = rH + R_bb * gasmed_or;
+glob_wrap_gasmed = rK + R_bb * gasmed_wrap;
+glob_ins_gasmed = rE + R_ob * gasmed_in;
+l_gasmed = norm(glob_wrap_gasmed - glob_ori_gasmed) + norm(glob_ins_gasmed - glob_wrap_gasmed);
+
+% gastocmenius lateralis lengte
+glob_ori_gaslat = rH + R_bb * gaslat_or;
+glob_wrap_gaslat = rK + R_bb * gaslat_wrap;
+glob_ins_gaslat = rE + R_ob * gaslat_in;
+l_gaslat = norm(glob_wrap_gaslat - glob_ori_gaslat) + norm(glob_ins_gaslat - glob_wrap_gaslat);
+
+
+
+
 
 %snelheden van origo en insertie in globaal assenstelsel
 v_ori_bicfemsh_glob = vH + ([ey_lok_bb -ex_lok_bb].*fip(4))*bicfemsh_or;
@@ -382,3 +475,4 @@ statedot = segdynstatedot;
 if parms.calculate_outputs
     y = [Vnew, l_bicfemsh,v_bicfemsh,F1_bicfemsh,pot_mom_bicfemsh,d_bicfemsh];
 end
+
